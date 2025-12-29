@@ -622,7 +622,16 @@ algned to the bottom */
 	line-height: var(--default-height);
 	align-content: start;
 	justify-content: stretch;
+	/*escriba edit*/
+	padding-inline-start: 3px;
 }
+
+/* escriba edit
+ hide icons
+*/
+button[uno-command='.uno:FontSize']
+
+
 
 .modalpopup .ui-treeview {
 	min-height: min-content;
@@ -765,8 +774,9 @@ algned to the bottom */
 }
 
 .ui-treeview-entry div:not(.autofilter) {
-	padding-inline-start: 2px;
-	margin-inline-end: 2px;
+	/* escriba edit --> fix treeview in same line*/
+	/* padding-inline-start: 2px;
+	margin-inline-end: 2px; */
 }
 
 .ui-treeview.disabled .ui-treeview-entry div:not(.autofilter) {

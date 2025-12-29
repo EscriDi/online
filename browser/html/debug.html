@@ -21,6 +21,48 @@
     <iframe id="coolframe" name= "coolframe" style="width:100%;height:100%;position:absolute;" title="Collabora Online" allow="fullscreen">
     </iframe>
     <script>
+
+      /* escirba edit*/
+        const params = new URLSearchParams(window.location.search);
+
+        const disableParagraph = params.get('disableParagraph');
+        const disableFont = params.get('disableFont') === 'true';
+        console.log("params: ", params)
+
+
+        window.customParams = {
+            disableParagraph: disableParagraph,
+            disableFont: disableFont
+        };
+
+
+
+
+
+
+        /*----------------------------------------------------------*/
+
+        function sendCustomConfig() {
+          const msg = {
+            MessageId: 'Host_SetCustomConfig',
+            Values: {
+              disableParagraph: disableParagraph,
+              disableFont: disableFont
+            }
+          };
+
+          document
+            .getElementById('coolframe')
+            .contentWindow
+            .postMessage(JSON.stringify(msg), '*');
+        }
+
+
+
+
+
+
+
         function constructWopiUrl() {
             let localServer = window.location.protocol + "//" + window.location.host;
             let localUrl = localServer + window.location.pathname + "?";
@@ -108,6 +150,25 @@
                 return;
               if (msg.Values.Status == 'Document_Loaded')
                 post({'MessageId': 'Host_PostmessageReady'});
+
+                /* escriba edit -- send data to inner iframe*/
+                function receivePostMessage(event) {
+                  if (event.origin !== window.origin)
+                    return;
+
+                  let msg;
+                  try {
+                    msg = JSON.parse(event.data);
+                  } catch (e) {
+                    return;
+                  }
+
+                  if (msg.MessageId === 'App_LoadingStatus' &&
+                      msg.Values?.Status === 'Document_Loaded') {
+                    sendCustomConfig();
+                  }
+                }
+
               break;
             case 'UI_Mention':
               if (!msg.Values)

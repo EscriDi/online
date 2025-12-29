@@ -32,10 +32,14 @@ interface UIModeCommand {
 	mode: UIMode;
 }
 
+
+
 /**
  * UIManager class – initializes UI elements (toolbars, menubar, ruler, etc.) and controls their visibility.
  */
 class UIManager extends window.L.Control {
+
+	
 	mobileWizard: any = null;
 	documentNameInput: any = null;
 	blockedUI: any = false;

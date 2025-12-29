@@ -29,7 +29,29 @@ var viewTabName = 'View';
 var helpTabName = 'Help';
 var formulaTabName = 'Formula';
 
+/*
+escriba edit - check url for edit parameter
+*/
+let disableFont;
+let disableParagraph
+
 window.L.Control.NotebookbarWriter = window.L.Control.Notebookbar.extend({
+
+	initialize: function(options) {
+		
+		// URL-Parameter auslesen
+		var params = new URLSearchParams(window.location.search);
+		this._disableParagraph = params.get('disableParagraph') === 'true';
+		this._disableFont = params.get('disableFont') === 'true';
+		
+		disableFont = this._disableFont 
+		disableParagraph = this._disableParagraph 
+		
+		// Parent initialize aufrufen
+		L.Control.Notebookbar.prototype.initialize.call(this, options);
+	},
+	
+/*-----------------------------------------------------------------------------------------------*/
 
 	getTabs: function() {
 		return [
@@ -560,89 +582,10 @@ window.L.Control.NotebookbarWriter = window.L.Control.Notebookbar.extend({
 	},
 
 	getHomeTab: function() {
-		var content = [
-			{
-				'id': 'home-undo-redo',
-				'type': 'container',
-				'children': [
-					{
-						'id': 'home-undo',
-						'type': 'toolitem',
-						'text': _UNO('.uno:Undo'),
-						'command': '.uno:Undo',
-						'accessibility': { focusBack: true,	combination: 'ZZ',	de: 'ZZ' }
-					},
-					{
-						'id': 'home-redo',
-						'type': 'toolitem',
-						'text': _UNO('.uno:Redo'),
-						'command': '.uno:Redo',
-						'accessibility': { focusBack: true,	combination: 'O',	de: 'W' }
-					},
-				],
-				'vertical': 'true'
-			},
-			{ type: 'separator', id: 'home-undoredo-break', orientation: 'vertical' },
-			{
-				'type': 'overflowgroup',
-				'id': 'home-clipboard',
-				'name': _('Clipboard'),
-				'accessibility': { focusBack: false,	combination: 'V',	de: null },
-				'children' : [
-				{
-					'id': 'home-paste:PasteMenu',
-					'type': 'menubutton',
-					'text': _UNO('.uno:Paste'),
-					'command': '.uno:Paste',
-					'accessibility': { focusBack: false,	combination: 'V',	de: null }
-				},
-				{
-					'type': 'container',
-					'children': [
-						{
-							'type': 'toolbox',
-							'children': [
-								{
-									'id': 'home-cut',
-									'type': 'customtoolitem',
-									'text': _UNO('.uno:Cut'),
-									'command': '.uno:Cut',
-									'accessibility': { focusBack: true, 	combination: 'X',	de: 'X' }
-								},
-								{
-									'id': 'home-brush',
-									'type': 'toolitem',
-									'text': _UNO('.uno:FormatPaintbrush'),
-									'command': '.uno:FormatPaintbrush',
-									'accessibility': { focusBack: true,	combination: 'FP',	de: null }
-								}
-							]
-						},
-						{
-							'type': 'toolbox',
-							'children': [
-								{
-									'id': 'home-copy',
-									'type': 'customtoolitem',
-									'text': _UNO('.uno:Copy'),
-									'command': '.uno:Copy',
-									'accessibility': { focusBack: true, 	combination: 'C',	de: 'C' }
-								},
-								{
-									'id': 'home-reset-attributes',
-									'type': 'toolitem',
-									'text': _UNO('.uno:ResetAttributes'),
-									'command': '.uno:ResetAttributes',
-									'accessibility': { focusBack: true, 	combination: 'E',	de: 'Q' }
-								}
-							]
-						}
-					],
-					'vertical': 'true'
-				}],
-			},
-			{ type: 'separator', id: 'home-resertattributes-break', orientation: 'vertical' },
-			{
+		/* escriba edit
+		hide and show icons for editing
+		*/
+		let homeFontV1 = 			{
 				'type': 'overflowgroup',
 				'id': 'home-font',
 				'name': _('Font'),
@@ -785,9 +728,139 @@ window.L.Control.NotebookbarWriter = window.L.Control.Notebookbar.extend({
 				],
 				'vertical': 'true'
 			},]
-			},
-			{ type: 'separator', id: 'home-fontcombobox-break', orientation: 'vertical' },
+			}
+
+				let homeFont = 			{
+				'type': 'overflowgroup',
+				'id': 'home-font',
+				'name': _('Font'),
+				'more': {
+					'command':'.uno:FontDialog',
+					'accessibility': { focusBack: true,	combination: 'MF', de: null },
+				},
+				'accessibility': { focusBack: false,	combination: 'FF',	de: null },
+				'children': [
 			{
+				'type': 'container',
+				'children': [
+					{
+						'type': 'container',
+						'children': [
+							{
+								'id': 'fontnamecombobox',
+								'type': 'combobox',
+								'text': 'Carlito',
+								'entries': [
+									'Carlito'
+								],
+								'selectedCount': '1',
+								'selectedEntries': [
+									'0'
+								],
+								'command': '.uno:CharFontName',
+								'accessibility': { focusBack: false,	combination: 'FF',	de: null }
+							},
+							{
+								'id': 'fontsizecombobox',
+								'type': 'combobox',
+								'text': '12 pt',
+								'entries': [
+									'12 pt'
+								],
+								'selectedCount': '1',
+								'selectedEntries': [
+									'0'
+								],
+								'command': '.uno:FontHeight',
+								'accessibility': { focusBack: false,	combination: 'FS',	de: null }
+							},
+							{
+								'id': 'home-grow',
+								'type': 'toolitem',
+								'text': _UNO('.uno:Grow'),
+								'command': '.uno:Grow',
+								'accessibility': { focusBack: true, 	combination: 'FG',	de: 'SV' }
+							},
+							{
+								'id': 'home-shrink',
+								'type': 'toolitem',
+								'text': _UNO('.uno:Shrink'),
+								'command': '.uno:Shrink',
+								'accessibility': { focusBack: true, 	combination: 'FK',	de: 'J' }
+							}
+						],
+						'vertical': 'false'
+					},
+					{
+						'type': 'container',
+						'children': [
+							{
+								'type': 'toolbox',
+								'children': [
+									{
+										'id': 'home-strikeout',
+										'type': 'toolitem',
+										'text': _UNO('.uno:Strikeout'),
+										'command': '.uno:Strikeout',
+										'accessibility': { focusBack: true, 	combination: '4',	de: '4' }
+									},
+									{
+										'id': 'home-subscript',
+										'type': 'toolitem',
+										'text': _UNO('.uno:SubScript'),
+										'command': '.uno:SubScript',
+										'accessibility': { focusBack: true, 	combination: '5',	de: '5' }
+									},
+									{
+										'id': 'home-superscript',
+										'type': 'toolitem',
+										'text': _UNO('.uno:SuperScript'),
+										'command': '.uno:SuperScript',
+										'accessibility': { focusBack: true, 	combination: '6',	de: '6' }
+									},
+									{
+										'id': 'home-spacing:CharSpacingMenu',
+										'type': 'menubutton',
+										'noLabel': true,
+										'text': _UNO('.uno:Spacing'),
+										'command': '.uno:CharSpacing',
+										'accessibility': { focusBack: false,	combination: 'FT',	de: null }
+									},
+									{
+										'id': 'home-back-color:ColorPickerMenu',
+										'class': 'unospan-CharBackColor',
+										'type': 'toolitem',
+										'noLabel': true,
+										'text': _UNO('.uno:CharBackColor', 'text'),
+										'command': '.uno:CharBackColor',
+										'accessibility': { focusBack: true,	combination: 'HC',	de:	null }
+									},
+									{
+										'id': 'home-color:ColorPickerMenu',
+										'class': 'unospan-FontColor',
+										'type': 'toolitem',
+										'noLabel': true,
+										'text': _UNO('.uno:Color'),
+										'command': '.uno:Color',
+										'accessibility': { focusBack: true,	combination: 'FC',	de: null }
+									}
+								]
+							}
+						],
+						'vertical': 'false'
+					}
+				],
+				'vertical': 'true'
+			},]
+			}
+
+
+
+
+
+
+
+		let homeParagraph = 			{
 				'type': 'overflowgroup',
 				'id': 'home-paragraph',
 				'name': _('Paragraph'),
@@ -808,7 +881,8 @@ window.L.Control.NotebookbarWriter = window.L.Control.Notebookbar.extend({
 										'type': 'toolitem',
 										'text': _UNO('.uno:DefaultBullet'),
 										'command': '.uno:DefaultBullet',
-										'accessibility': { focusBack: true, 	combination: 'U',	de: 'AA' }
+										'accessibility': { focusBack: true, 	combination: 'U',	de: 'AA' },
+										'disable' : true
 									},
 									{
 										'id': 'home-default-numbering',
@@ -915,7 +989,107 @@ window.L.Control.NotebookbarWriter = window.L.Control.Notebookbar.extend({
 					}
 				],
 				'vertical': 'true'
+			}
+
+
+			console.log("disableTest: ",disableFont,disableParagraph);
+			
+		if(disableFont){
+			console.log("disable1");
+			
+			homeFont = {}
+		}
+		if(disableParagraph){
+				console.log("disable2");
+			homeParagraph = {}
+		}
+
+					var content = [
+			{
+				'id': 'home-undo-redo',
+				'type': 'container',
+				'children': [
+					{
+						'id': 'home-undo',
+						'type': 'toolitem',
+						'text': _UNO('.uno:Undo'),
+						'command': '.uno:Undo',
+						'accessibility': { focusBack: true,	combination: 'ZZ',	de: 'ZZ' }
+					},
+					{
+						'id': 'home-redo',
+						'type': 'toolitem',
+						'text': _UNO('.uno:Redo'),
+						'command': '.uno:Redo',
+						'accessibility': { focusBack: true,	combination: 'O',	de: 'W' }
+					},
+				],
+				'vertical': 'true'
 			},
+			{ type: 'separator', id: 'home-undoredo-break', orientation: 'vertical' },
+			{
+				'type': 'overflowgroup',
+				'id': 'home-clipboard',
+				'name': _('Clipboard'),
+				'accessibility': { focusBack: false,	combination: 'V',	de: null },
+				'children' : [
+				{
+					'id': 'home-paste:PasteMenu',
+					'type': 'menubutton',
+					'text': _UNO('.uno:Paste'),
+					'command': '.uno:Paste',
+					'accessibility': { focusBack: false,	combination: 'V',	de: null }
+				},
+				{
+					'type': 'container',
+					'children': [
+						{
+							'type': 'toolbox',
+							'children': [
+								{
+									'id': 'home-cut',
+									'type': 'customtoolitem',
+									'text': _UNO('.uno:Cut'),
+									'command': '.uno:Cut',
+									'accessibility': { focusBack: true, 	combination: 'X',	de: 'X' }
+								},
+								{
+									'id': 'home-brush',
+									'type': 'toolitem',
+									'text': _UNO('.uno:FormatPaintbrush'),
+									'command': '.uno:FormatPaintbrush',
+									'accessibility': { focusBack: true,	combination: 'FP',	de: null }
+								}
+							]
+						},
+						{
+							'type': 'toolbox',
+							'children': [
+								{
+									'id': 'home-copy',
+									'type': 'customtoolitem',
+									'text': _UNO('.uno:Copy'),
+									'command': '.uno:Copy',
+									'accessibility': { focusBack: true, 	combination: 'C',	de: 'C' }
+								},
+								{
+									'id': 'home-reset-attributes',
+									'type': 'toolitem',
+									'text': _UNO('.uno:ResetAttributes'),
+									'command': '.uno:ResetAttributes',
+									'accessibility': { focusBack: true, 	combination: 'E',	de: 'Q' }
+								}
+							]
+						}
+					],
+					'vertical': 'true'
+				}],
+			},
+			{ type: 'separator', id: 'home-resertattributes-break', orientation: 'vertical' },
+
+			homeFont,
+			{ type: 'separator', id: 'home-fontcombobox-break', orientation: 'vertical' },
+			homeParagraph,
 			{
 			   'type': 'overflowgroup',
 			   'id': 'home-stylesview-group',
@@ -1049,6 +1223,9 @@ window.L.Control.NotebookbarWriter = window.L.Control.Notebookbar.extend({
 				]
 			},
 		];
+		
+		
+	
 
 		return this.getTabPage(homeTabName, content);
 	},
@@ -3405,6 +3582,7 @@ window.L.Control.NotebookbarWriter = window.L.Control.Notebookbar.extend({
 		var that = this;
 
 		return children.map(function(c) {
+			console.log("children: ", c)
 			if (!c.type) {
 				return null;
 			}

@@ -92,6 +92,13 @@ inline std::ostream& operator<<(std::ostream& os, const std::chrono::microsecond
     return os;
 }
 
+inline std::ostream& operator<<(std::ostream& os, const std::chrono::hours& h)
+{
+    os << h.count() << "h";
+    return os;
+}
+
+
 template <typename S, typename U, typename V>
 inline S& operator<<(S& stream, const std::pair<U, V>& pair)
 {
@@ -1458,6 +1465,7 @@ inline std::ostream& operator<<(std::ostream& os, const std::chrono::system_cloc
     os << Util::getIso8601FracformatTime(ts);
     return os;
 }
+
 
 inline std::ostream& operator<<(std::ostream& os, const Util::Backtrace& bt) { return bt.send(os); }
 

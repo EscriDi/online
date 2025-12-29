@@ -1534,6 +1534,7 @@ class TreeViewControl {
 					'ui-treeview-state-column',
 				);
 			else
+				console.log("c")
 				window.L.DomUtil.addClass(
 					this._thead.lastChild,
 					'ui-treeview-icon-column',
